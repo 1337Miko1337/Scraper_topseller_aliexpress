@@ -10,16 +10,17 @@ soup = BeautifulSoup(driver.page_source, 'html.parser')
 names = soup.find_all(class_='goods-tile__heading ng-star-inserted')
 prices = soup.find_all(class_='goods-tile__price--old price--gray ng-star-inserted')
 currency = soup.find_all('span', class_='currency')
-characteristic = soup.find_all(class_='goods-tile__description goods-tile__description_type_text ng-star-inserted')
 connection = pymysql.connect(host='127.0.0.1', password='admin', user='root', port=3306, database='notebooks',
                              cursorclass=pymysql.cursors.DictCursor) # connect to MySQL database, my database placed in localhost
 cursor = connection.cursor()
-
+min_len = min(len(names), len(prices))
 # info processing
-for i in range(len(names)):
+for i in range(min_len):
+    print('names: ', names)
     name = names[i]['title']
     name = name.replace('"', '')
     link = names[i]['href']
+    print('link: ', link)
     driver.get('' + link + 'characteristics/')
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     # to scrape characteristic of product we get link to page of product and redirect to characteristics
